@@ -12,56 +12,58 @@ function patternForBeforeFieldOnly(lineObject) {
     }
 }
 
+function stringPatternForField(fields, builder) {
+    var pattens = fields.map(builder);
+    return pattens.join("|");
+}
+
 function patternForBothField(lineObject) {
-    if (alphabetRegExp.test(lineObject.beforeField)) {
-        return {
-            "beforeRegexp": new RegExp("\\b" + lineObject.beforeField + "\\b"),
-            "afterRegexp": lineObject.afterField
+    var beforeStringPattern = stringPatternForField(lineObject.beforeFieldWords, function (word) {
+        if (alphabetRegExp.test(word)) {
+            return "\\b" + word + "\\b";
+        } else {
+            return word;
         }
-    } else {
-        return {
-            "beforeRegexp": new RegExp(lineObject.beforeField),
-            "afterRegexp": lineObject.afterField
-        }
+    });
+    return {
+        "beforeRegexp": new RegExp(escapeRegExp(beforeStringPattern)),
+        "afterRegexp": lineObject.afterField
     }
 }
 function safeString(string) {
     return string == null ? "" : string;
 }
 function patternForRatherChar(lineObject) {
-    if (alphabetRegExp.test(lineObject.beforeField)) {
-        var string = [lineObject.beforeChar, lineObject.beforeField, lineObject.afterChar].join("\\b");
-        return {
-            "beforeRegexp": new RegExp(escapeRegExp(string)),
-            "afterRegexp": lineObject.afterField
+    var beforeStringPattern = stringPatternForField(lineObject.beforeFieldWords, function (word) {
+        if (alphabetRegExp.test(word)) {
+            var string = [lineObject.beforeChar, word, lineObject.afterChar].join("\\b");
+            return string;
+        } else {
+            var string = [lineObject.beforeChar, word, lineObject.afterChar].join("");
+            return string;
         }
-    } else {
-        var string = [lineObject.beforeChar, lineObject.beforeField, lineObject.afterChar].join("");
-        return {
-            "beforeRegexp": new RegExp(escapeRegExp(string)),
-            "afterRegexp": lineObject.afterField
-        };
+    });
+    return {
+        "beforeRegexp": new RegExp(escapeRegExp(beforeStringPattern)),
+        "afterRegexp": lineObject.afterField
     }
 }
 function patternForBothChar(lineObject) {
-    if (alphabetRegExp.test(lineObject.beforeField)) {
-        return  {
-            "beforeRegexp": new RegExp(
-                    "(?:" + lineObject.beforeChar + "\\b" + lineObject.beforeField + ")"
-                    + "|"
-                    + "(?:" + lineObject.beforeField + "\\b" + lineObject.afterChar + ")"
-            ),
-            "afterRegexp": lineObject.afterField
-        };
-    } else {
-        return  {
-            "beforeRegexp": new RegExp(
-                    "(?:" + lineObject.beforeChar + lineObject.beforeField + ")"
-                    + "|"
-                    + "(?:" + lineObject.beforeField + lineObject.afterChar + ")"
-            ),
-            "afterRegexp": lineObject.afterField
-        };
+    var beforeStringPattern = stringPatternForField(lineObject.beforeFieldWords, function (word) {
+        if (alphabetRegExp.test(word)) {
+            return "(?:" + lineObject.beforeChar + "\\b" + word + ")"
+                + "|"
+                + "(?:" + word + "\\b" + lineObject.afterChar + ")"
+        } else {
+            return "(?:" + lineObject.beforeChar + word + ")"
+                + "|"
+                + "(?:" + word + lineObject.afterChar + ")"
+        }
+    });
+
+    return {
+        "beforeRegexp": new RegExp(escapeRegExp(beforeStringPattern)),
+        "afterRegexp": lineObject.afterField
     }
 }
 function lineParse(line) {
@@ -116,6 +118,8 @@ function lineParse(line) {
     var lineObject = {
         // 変更前単語
         beforeField: beforeField,
+        // | で区切った文字列
+        beforeFieldWords: beforeField && beforeField.split("|"),
         // 変更後単語
         afterField: afterField,
         // 前置文字

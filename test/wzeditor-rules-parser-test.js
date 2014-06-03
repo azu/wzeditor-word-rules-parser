@@ -82,11 +82,25 @@ describe("wzeditor-rules-parser", function () {
             });
         });
     });
-    context("前置文字に|がある場合", function () {
-        var content = "変換後\tABC|EFG\t[\\w],[\\d]";
-        it("|の数だけorの正規表現が作成される", function () {
-            var result = parser.parse(content);
-            assertRegExp(result[0].beforeRegexp, /(?:[\w]\bABC)|(?:ABC\b[\d])|(?:[\w]\bEFG)|(?:EFG\b[\d])/);
+    context("変更前単語に|があるケースについて", function () {
+        context("指定されてるのが変更前単語のみの時", function () {
+            it("|で区切られたORの正規表現が作成される", function () {
+                var enContent = "変換後\tABC|EFG";
+                var result_en = parser.parse(enContent);
+                assertRegExp(result_en[0].beforeRegexp, /\bABC\b|\bEFG\b/);
+
+                var jaContent = "変換後\t日本語|EFG";
+                var result_ja = parser.parse(jaContent);
+                assertRegExp(result_ja[0].beforeRegexp, /日本語|\bEFG\b/);
+            });
+        });
+        context("前置、後置文字がある時", function () {
+            var content = "変換後\tABC|EFG\t[\\w],[\\d]";
+            it("|で区切られ、それぞれに前置、後置文字を付けた正規表現が作成される", function () {
+                var result = parser.parse(content);
+                assertRegExp(result[0].beforeRegexp, /(?:[\w]\bABC)|(?:ABC\b[\d])|(?:[\w]\bEFG)|(?:EFG\b[\d])/);
+            });
+
         });
     });
 });
