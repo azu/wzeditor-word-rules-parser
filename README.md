@@ -23,7 +23,7 @@ npm wzeditor-word-rules-parser
 ## Usage
 
 ``` js
-var parser = require("../lib/wzeditor-rules-parser");
+var parser = require("wzeditor-rules-parser");
 var file = fs.readFileSync(__dirname + "/../dictionary/WEB+DB PRESS用語統一ルール", "utf-8");
 var result = parser.parse(content);
 /*
