@@ -1,4 +1,4 @@
-# wzeditor-word-rules-parser
+# wzeditor-word-rules-parser [![Build Status](https://travis-ci.org/azu/wzeditor-word-rules-parser.svg?branch=master)](https://travis-ci.org/azu/wzeditor-word-rules-parser)
 
 [WZ EDITOR](http://www.wzsoft.jp/wz8/index.html "WZ EDITOR")の用語統一辞書のパーサーです。
 
