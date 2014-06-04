@@ -37,6 +37,7 @@ var result = parser.parse(content);
   { beforeRegexp: /アィディア|アイディア|アィディア|アィデア/, afterRegexp: 'アイデア' },
  ....
 ]
+*/
 ```
 
 ## Contributing
