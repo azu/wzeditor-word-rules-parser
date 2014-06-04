@@ -2,7 +2,10 @@
 
 var alphabetRegExp = /^[a-zA-Z]+$/;
 function escapeRegExp(string) {
-    return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\$1");
+    if(!string) {
+        return;
+    }
+    return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
 }
 // line -> object
 function patternForBeforeFieldOnly(lineObject) {
@@ -16,53 +19,67 @@ function stringPatternForField(fields, builder) {
     var pattens = fields.map(builder);
     return pattens.join("|");
 }
+function wordBuilder(predicate, string) {
+    if (predicate(string)) {
+        return string;
+    } else {
+        return escapeRegExp(string);
+    }
+}
 
 function patternForBothField(lineObject) {
+    var representWord = wordBuilder.bind(this, function () {
+        return lineObject.hasRegExpOption;
+    });
     var beforeStringPattern = stringPatternForField(lineObject.beforeFieldWords, function (word) {
         if (alphabetRegExp.test(word)) {
-            return "\\b" + word + "\\b";
+            return "\\b" + representWord(word) + "\\b";
         } else {
-            return word;
+            return representWord(word);
         }
     });
     return {
-        "beforeRegexp": new RegExp(escapeRegExp(beforeStringPattern)),
+        "beforeRegexp": new RegExp(beforeStringPattern),
         "afterRegexp": lineObject.afterField
     }
 }
-function safeString(string) {
-    return string == null ? "" : string;
-}
 function patternForRatherChar(lineObject) {
+    var representWord = wordBuilder.bind(this, function () {
+        return lineObject.hasRegExpOption;
+    });
     var beforeStringPattern = stringPatternForField(lineObject.beforeFieldWords, function (word) {
         if (alphabetRegExp.test(word)) {
-            var string = [lineObject.beforeChar, word, lineObject.afterChar].join("\\b");
+            var string = [lineObject.beforeChar, representWord(word), lineObject.afterChar].join("\\b");
             return string;
         } else {
-            var string = [lineObject.beforeChar, word, lineObject.afterChar].join("");
+            var string = [lineObject.beforeChar, representWord(word), lineObject.afterChar].join("");
             return string;
         }
     });
     return {
-        "beforeRegexp": new RegExp(escapeRegExp(beforeStringPattern)),
+        "beforeRegexp": new RegExp(beforeStringPattern),
         "afterRegexp": lineObject.afterField
     }
 }
 function patternForBothChar(lineObject) {
+    var representWord = wordBuilder.bind(this, function () {
+        return lineObject.hasRegExpOption;
+    });
     var beforeStringPattern = stringPatternForField(lineObject.beforeFieldWords, function (word) {
+
         if (alphabetRegExp.test(word)) {
-            return "(?:" + lineObject.beforeChar + "\\b" + word + ")"
+            return "(?:" + lineObject.beforeChar + "\\b" + representWord(word) + ")"
                 + "|"
-                + "(?:" + word + "\\b" + lineObject.afterChar + ")"
+                + "(?:" + representWord(word) + "\\b" + lineObject.afterChar + ")"
         } else {
-            return "(?:" + lineObject.beforeChar + word + ")"
+            return "(?:" + lineObject.beforeChar + representWord(word) + ")"
                 + "|"
-                + "(?:" + word + lineObject.afterChar + ")"
+                + "(?:" + representWord(word) + lineObject.afterChar + ")"
         }
     });
 
     return {
-        "beforeRegexp": new RegExp(escapeRegExp(beforeStringPattern)),
+        "beforeRegexp": new RegExp(beforeStringPattern),
         "afterRegexp": lineObject.afterField
     }
 }
@@ -128,7 +145,6 @@ function lineParse(line) {
         afterChar: afterChar,
         hasRegExpOption: hasRegExpOption
     };
-
     /*
     # なお、正解パターンだけ置く場合、WZ6以降ではそれ以外の記述があると機能しなくなる（コメントもだめ）
     # 「CakePHP　<★cakephp★>」ではWZ6以降は機能しない

@@ -5,9 +5,6 @@ var parser = require("../wzeditor-rules-parser");
 function assertRegExp(actual, expect) {
     assert.equal(String(actual), String(expect));
 }
-function escapeS(string) {
-    return string.replace(/\\/g, "\\\\");
-}
 describe("wzeditor-rules-parser", function () {
     var file = fs.readFileSync(__dirname + "/../dictionary/WEB+DB PRESS用語統一ルール", "utf-8");
     context("When 前置文字だけの場合", function () {
@@ -101,6 +98,33 @@ describe("wzeditor-rules-parser", function () {
                 assertRegExp(result[0].beforeRegexp, /(?:[\w]\bABC)|(?:ABC\b[\d])|(?:[\w]\bEFG)|(?:EFG\b[\d])/);
             });
 
+        });
+    });
+    context("正規表現オプション RE について", function () {
+        context("オプションREが指定されていない場合", function () {
+            it("変更前単語は文字列として扱われる", function () {
+                var content = "変換後\t単語[\\d]";
+                var results = parser.parse(content);
+                assertRegExp(results[0].beforeRegexp, /単語\[\\d\]/);
+            });
+            it("前置との組み合わせ時も変更前単語は文字列として扱われる", function () {
+                var content = "変換後\t単語[\\d]\t[\\d]";
+                var results = parser.parse(content);
+                assertRegExp(results[0].beforeRegexp, /[\d]単語\[\\d\]/);
+            });
+        });
+        context("オプションREが指定されている場合", function () {
+            var content = "変換後\t単語[\\d]\t,,RE";
+            it("変更前単語は正規表現として扱われる", function () {
+                var results = parser.parse(content);
+                assertRegExp(results[0].beforeRegexp, /単語[\d]/);
+            });
+
+            it("前置との組み合わせ時も変更前単語は正規表現として扱われる", function () {
+                var content = "変換後\t単語[\\d]\t[\\d]";
+                var results = parser.parse(content);
+                assertRegExp(results[0].beforeRegexp, /[\d]単語[\d]/);
+            });
         });
     });
 });
