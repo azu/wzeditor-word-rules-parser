@@ -17,7 +17,7 @@
 ## Installation
 
 ```sh
-npm wzeditor-word-rules-parser
+npm install wzeditor-word-rules-parser
 ```
 
 ## Usage

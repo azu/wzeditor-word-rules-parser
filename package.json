@@ -1,6 +1,7 @@
 {
   "name": "wzeditor-word-rules-parser",
   "description": "WZ EDITOR 用語統一辞書パーサー",
+  "keywords":["日本語","japanese","parse"],
   "version": "0.0.2",
   "homepage": "https://github.com/azu/wzeditor-word-rules-parser/",
   "repository": {
