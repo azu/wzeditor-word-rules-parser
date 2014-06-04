@@ -7,7 +7,9 @@ function assertRegExp(actual, expect) {
 }
 describe("wzeditor-rules-parser", function () {
     var file = fs.readFileSync(__dirname + "/../dictionary/WEB+DB PRESS用語統一ルール", "utf-8");
+
     context(".beforeRegexp", function () {
+
         context("When 前置文字だけの場合", function () {
             var content = "Git";
             it("大文字を無視する変換の正規表現を生成", function () {
