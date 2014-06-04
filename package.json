@@ -7,6 +7,9 @@
         "url": "git://github.com/azu/wzeditor-word-rules-parser.git"
     },
     "main": "lib/wzeditor-rules-parser.js",
+    "bin": {
+        "wzeditor-word-rules-parser": "./cli/cli.js"
+    },
     "scripts": {
         "test": "mocha test/*.js"
     },
