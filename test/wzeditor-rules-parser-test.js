@@ -44,7 +44,6 @@ describe("wzeditor-rules-parser", function () {
                 var content = "変換後\tABC\t[\\d]";
                 it("変更前単語 \b 前置文字 の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    console.log(result[0].beforeRegexp);
                     assertRegExp(result[0].beforeRegexp, /[\d]\bABC\b/);
                 });
             });
