@@ -1,7 +1,7 @@
 "use strict";
 var assert = require("power-assert");
 var fs = require("fs");
-var parser = require("../wzeditor-rules-parser");
+var parser = require("../lib/wzeditor-rules-parser");
 function assertRegExp(actual, expect) {
     assert.equal(String(actual), String(expect));
 }
@@ -123,7 +123,7 @@ describe("wzeditor-rules-parser", function () {
             it("前置との組み合わせ時も変更前単語は正規表現として扱われる", function () {
                 var content = "変換後\t単語[\\d]\t[\\d]";
                 var results = parser.parse(content);
-                assertRegExp(results[0].beforeRegexp, /[\d]単語[\d]/);
+                assertRegExp(results[0].beforeRegexp, /[\d]単語\[\\d\]/);
             });
         });
     });
