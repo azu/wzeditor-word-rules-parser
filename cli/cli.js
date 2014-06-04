@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 "use strict";
 var parserStream = require("../lib/wzeditor-rules-stream");
 var es = require("event-stream");
