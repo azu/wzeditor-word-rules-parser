@@ -14,7 +14,7 @@ describe("wzeditor-rules-parser", function () {
             var content = "Git";
             it("大文字を無視する変換の正規表現を生成", function () {
                 var result = parser.parse(content);
-                assertRegExp(result[0].beforeRegexp, /Git/i);
+                assertRegExp(result[0].beforeRegexp, /\bGit\b/i);
             });
         });
         context("単純な文字列置換において", function () {
