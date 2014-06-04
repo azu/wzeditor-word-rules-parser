@@ -448,8 +448,8 @@ Ubuntu	ubuntu|Ubuntsu|ubuntsu|Ubuntu Linux
 Unicode	unicode|ユニコード
 UNIX	Unix
 UTF-8	UTF8|UTF 8|utf8
-vi	Vi	[^./.],[^mt-/.]
-Vim	vim	[^./.],[^t-/.]
+# vi	Vi	[^./.],[^mt-/.]
+# Vim	vim	[^./.],[^t-/.]
 Vim \1	vim([0-9])	,,RE,<★vim9★Vim8★>
 Vimスクリプト	vim script
 Visual Basic	VisualBasic|VB
