@@ -8,7 +8,7 @@ process.stdin                        //connect streams together with `pipe`
     .pipe(es.split())                  //split stream to break on newlines
     .pipe(parserStream())
     .pipe(es.map(function (data, cb) {
-        cb(null, JSON.stringify(data, function censor(key, value) {
+        cb(null, JSON.stringify(data, function (key, value) {
             if (typeName(value) === "RegExp") {
                 return String(value);
             }

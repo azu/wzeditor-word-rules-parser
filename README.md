@@ -22,20 +22,27 @@ npm install wzeditor-word-rules-parser
 
 ## Usage
 
+
+
+### CLI
+
+### Module
+
 ``` js
 var parser = require("wzeditor-rules-parser");
 var content = fs.readFileSync(__dirname + "/../dictionary/WEB+DB PRESS用語統一ルール", "utf-8");
 var result = parser.parse(content);
 /*
-[ { beforeRegexp: /クッキー|\bCOOKIE\b|\bcookie\b/,
-    afterRegexp: 'Cookie' },
-  { beforeRegexp: /Web Socket/, afterRegexp: 'WebSocket' },
-  { beforeRegexp: /(?:[^/]ウェブ)|(?:ウェブ[^/\+])|(?:[^/]\bWEB)|(?:WEB\b[^/\+])|(?:[^/]ウェッブ)|(?:ウェッブ[^/\+])/,
-    afterRegexp: 'Web' },
-  { beforeRegexp: /ORマッ|O-Rマッ/, afterRegexp: 'O/Rマッ' },
-  { beforeRegexp: /O\/Rマッパー|\bORM\b/, afterRegexp: 'O/Rマッパ' },
-  { beforeRegexp: /アィディア|アイディア|アィディア|アィデア/, afterRegexp: 'アイデア' },
- ....
+[ { pattern: 'クッキー|\\bCOOKIE\\b|\\bcookie\\b',
+    expected: 'Cookie' },
+  { pattern: 'Web Socket', expected: 'WebSocket' },
+  { pattern: '(?:[^/]ウェブ)|(?:ウェブ[^/\\+])|(?:[^/]\\bWEB)|(?:WEB\\b[^/\\+])|(?:[^/]ウェッブ)|(?:ウェッブ[^/\\+])',
+    expected: 'Web' },
+  { pattern: '\\bEmacs\\b', flag: 'i', expected: 'Emacs' },
+  { pattern: 'Emacs([0-9])', expected: 'Emacs $1' },
+  { pattern: '\\bEmacs Lisp\\b',
+    flag: 'i',
+    expected: 'Emacs Lisp' }
 ]
 */
 ```
