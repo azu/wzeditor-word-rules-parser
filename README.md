@@ -24,7 +24,7 @@ npm install wzeditor-word-rules-parser
 
 ``` js
 var parser = require("wzeditor-rules-parser");
-var file = fs.readFileSync(__dirname + "/../dictionary/WEB+DB PRESS用語統一ルール", "utf-8");
+var content = fs.readFileSync(__dirname + "/../dictionary/WEB+DB PRESS用語統一ルール", "utf-8");
 var result = parser.parse(content);
 /*
 [ { beforeRegexp: /クッキー|\bCOOKIE\b|\bcookie\b/,
