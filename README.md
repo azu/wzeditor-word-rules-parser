@@ -6,7 +6,7 @@
 
 > \1\2ほう\3	([^使])([いくすたつのる])方([ぁ-んァ-ヶ])	,,RE<★い方が★☆使い方☆>
 
-のような行ごとの辞書を正規表現に変換します。
+のような行ごとの辞書をJSONに変換します。
 
 ### 調査レポート
 
@@ -22,11 +22,9 @@ npm install wzeditor-word-rules-parser
 
 ## Usage
 
-
-
-### CLI
-
 ### Module
+
+`wzeditor-rules-parser` をテキストコンテンツを渡す事でパースした結果を返してくれる。
 
 ``` js
 var parser = require("wzeditor-rules-parser");
@@ -46,6 +44,37 @@ var result = parser.parse(content);
 ]
 */
 ```
+
+それぞれのオブジェクトは以下のような意味を持つ
+
+- `pattern` {String} : マッチする文字列
+- `flag` {String} : マッチする文字列の正規表現で指定するフラグ
+- `expected` {String} : マッチする文字列を置換する
+
+
+```js
+{
+    "pattern" : "string",
+    "flag" : "string | null",
+    "expected": "string"
+}
+```
+
+つまり、JavaScriptでは以下のようにすることで置換が可能になる。
+
+```js
+var matchWord = new Regexp(pattern, flag);
+"target test".replace(matchWord, expected);
+```
+
+
+### CLI
+
+```sh
+wzeditor-word-rules-parser "dictionary/WEB+DB PRESS用語統一ルール"
+```
+
+とすることでパースしたJSONを返す事も出来ます。
 
 ## Contributing
 
