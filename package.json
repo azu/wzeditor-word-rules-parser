@@ -11,7 +11,7 @@
   "repository": {
     "url": "git://github.com/azu/wzeditor-word-rules-parser.git"
   },
-  "main": "lib/wzeditor-rules-parser.js",
+  "main": "index.js",
   "bin": {
     "wzeditor-word-rules-parser": "./cli/cli.js"
   },
