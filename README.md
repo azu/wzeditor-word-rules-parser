@@ -34,8 +34,12 @@ var result = parser.parse(content);
 [ { pattern: 'クッキー|\\bCOOKIE\\b|\\bcookie\\b',
     expected: 'Cookie' },
   { pattern: 'Web Socket', expected: 'WebSocket' },
-  { pattern: '(?:[^/]ウェブ)|(?:ウェブ[^/\\+])|(?:[^/]\\bWEB)|(?:WEB\\b[^/\\+])|(?:[^/]ウェッブ)|(?:ウェッブ[^/\\+])',
-    expected: 'Web' },
+  { pattern: '(?:([^/])ウェブ)|(?:ウェブ([^/\\+]))',
+    expected: '$1Web$2' },
+  { pattern: '(?:([^/])\\bWEB)|(?:WEB\\b([^/\\+]))',
+    expected: '$1Web$2' },
+  { pattern: '(?:([^/])ウェッブ)|(?:ウェッブ([^/\\+]))',
+    expected: '$1Web$2' },
   { pattern: '\\bEmacs\\b', flag: 'i', expected: 'Emacs' },
   { pattern: 'Emacs([0-9])', expected: 'Emacs $1' },
   { pattern: '\\bEmacs Lisp\\b',
@@ -49,7 +53,7 @@ var result = parser.parse(content);
 
 - `pattern` {String} : マッチする文字列
 - `flag` {String} : マッチする文字列の正規表現で指定するフラグ
-- `expected` {String} : マッチする文字列を置換する
+- `expected` {String} : マッチする文字列に対応している置換する文字列(正規表現のプレースホルダを含む)
 
 
 ```js
@@ -64,7 +68,7 @@ var result = parser.parse(content);
 
 ```js
 var matchWord = new Regexp(pattern, flag);
-"target test".replace(matchWord, expected);
+"置換対象の文字列".replace(matchWord, expected);
 ```
 
 
