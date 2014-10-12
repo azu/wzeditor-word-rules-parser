@@ -40,14 +40,14 @@ describe("wzeditor-rules-parser", function () {
                 var content = "変換後\t日本語\t[\\d]";
                 it("前置文字 + 変更前単語 の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /[\d]日本語/);
+                    assertRegExp(result[0].pattern, /([\d])日本語/);
                 });
             });
             context("変更前単語がアルファベットの時", function () {
                 var content = "変換後\tABC\t[\\d]";
                 it("変更前単語 \b 前置文字 の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /[\d]\bABC\b/);
+                    assertRegExp(result[0].pattern, /([\d])\bABC\b/);
                 });
             });
         });
@@ -56,14 +56,14 @@ describe("wzeditor-rules-parser", function () {
                 var content = "変換後\t日本語\t,[\\d]";
                 it("変更前単語 + 後置文字 の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /日本語[\d]/);
+                    assertRegExp(result[0].pattern, /日本語([\d])/);
                 });
             });
             context("変更前単語がアルファベットの時", function () {
                 var content = "変換後\tABC\t,[\\d]";
                 it("変更前単語 \b 後置文字 の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /\bABC\b[\d]/);
+                    assertRegExp(result[0].pattern, /\bABC\b([\d])/);
                 });
             });
         });
@@ -72,14 +72,16 @@ describe("wzeditor-rules-parser", function () {
                 var content = "変換後\t日本語\t[\\w],[\\d]";
                 it("(前置文字 + 変更前単語) or (変更前単語 + 後置文字)の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /(?:[\w]日本語)|(?:日本語[\d])/);
+                    assertRegExp(result[0].pattern, /(?:([\w])日本語)|(?:日本語([\d]))/);
+                    assert.equal(result[0].expected, "$1変換後$2");
                 });
             });
             context("変更前単語がアルファベットの時", function () {
                 var content = "変換後\tABC\t[\\w],[\\d]";
                 it("(前置文字 \b 変更前単語) or (変更前単語 b 後置文字)の正規表現を生成", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /(?:[\w]\bABC)|(?:ABC\b[\d])/);
+                    assertRegExp(result[0].pattern, /(?:([\w])\bABC)|(?:ABC\b([\d]))/);
+                    assert.equal(result[0].expected, "$1変換後$2");
                 });
             });
         });
@@ -97,11 +99,15 @@ describe("wzeditor-rules-parser", function () {
             });
             context("前置、後置文字がある時", function () {
                 var content = "変換後\tABC|EFG\t[\\w],[\\d]";
-                it("|で区切られ、それぞれに前置、後置文字を付けた正規表現が作成される", function () {
+                it("|でそれぞれ別々のオブジェクトが組み立てられる", function () {
                     var result = parser.parse(content);
-                    assertRegExp(result[0].pattern, /(?:[\w]\bABC)|(?:ABC\b[\d])|(?:[\w]\bEFG)|(?:EFG\b[\d])/);
+                    assert(result.length == "ABC|EFG".split("|").length);
                 });
-
+                it("|で区切られたオブジェクトはそれぞれ前置文字、後置文字があるケースとして処理される", function () {
+                    var result = parser.parse(content);
+                    assertRegExp(result[0].pattern, /(?:([\w])\bABC)|(?:ABC\b([\d]))/);
+                    assertRegExp(result[1].pattern, /(?:([\w])\bEFG)|(?:EFG\b([\d]))/);
+                });
             });
         });
         context("正規表現オプション RE について", function () {
@@ -114,7 +120,7 @@ describe("wzeditor-rules-parser", function () {
                 it("前置との組み合わせ時も変更前単語は文字列として扱われる", function () {
                     var content = "変換後\t単語[\\d]\t[\\d]";
                     var results = parser.parse(content);
-                    assertRegExp(results[0].pattern, /[\d]単語\[\\d\]/);
+                    assertRegExp(results[0].pattern, /([\d])単語\[\\d\]/);
                 });
             });
             context("オプションREが指定されている場合", function () {
@@ -125,9 +131,9 @@ describe("wzeditor-rules-parser", function () {
                 });
 
                 it("前置との組み合わせ時も変更前単語は正規表現として扱われる", function () {
-                    var content = "変換後\t単語[\\d]\t[\\d]";
+                    var content = "変換後\t単語[\\d]\t[\\d],,RE";
                     var results = parser.parse(content);
-                    assertRegExp(results[0].pattern, /[\d]単語\[\\d\]/);
+                    assertRegExp(results[0].pattern, /([\d])単語[\d]/);
                 });
             });
         });
