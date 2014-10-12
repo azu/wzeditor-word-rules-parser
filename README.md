@@ -12,7 +12,7 @@
 
 辞書の形式の仕様は公開されてないので、実行結果から推測して正規表現に落としています。
 
-* [WZ Editor 用語統一ヘルプ](https://gist.github.com/azu/ae4d643aff11e4562267 "WZ Editor 用語統一ヘルプ")
+* [WZ Editor 用語統一ヘルプと分析](doc/wzeditor-rule.md)
 
 ## Installation
 
