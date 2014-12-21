@@ -66,6 +66,13 @@ describe("wzeditor-rules-parser", function () {
                     assertRegExp(result[0].pattern, /\bABC\b([\d])/);
                 });
             });
+            context("変更前単語がアルファベット+スペースの時", function () {
+                var content = "変換後\tA B C\t,[\\d]";
+                it("変更前単語 \b 後置文字 の正規表現を生成", function () {
+                    var result = parser.parse(content);
+                    assertRegExp(result[0].pattern, /\bA B C\b([\d])/);
+                });
+            });
         });
         context("前置文字、後置文字両方ある場合で", function () {
             context("変更前単語が日本語の時", function () {
