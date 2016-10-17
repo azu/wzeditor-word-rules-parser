@@ -146,15 +146,15 @@ describe("wzeditor-rules-parser", function () {
         });
     });
     context(".afterRegexp", function () {
-        context("when contain \1\2", function () {
-            var content = "変換後\\1\\2\t(単語)";
+        context("when contain $1$2", function () {
+            var content = "変換後$1$2\t(単語)";
             it("should replace to $1$2", function () {
                 var results = parser.parse(content);
                 assert.equal(results[0].expected, "変換後$1$2");
             });
         });
-        context("when contain \2", function () {
-            var content = "変換後\\2\t(単語)";
+        context("when contain $2", function () {
+            var content = "変換後\$2\t(単語)";
             it("should replace to $2", function () {
                 var results = parser.parse(content);
                 assert.equal(results[0].expected, "変換後$2");
