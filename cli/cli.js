@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 "use strict";
-var parse = require("../lib/wzeditor-rules-parser").parse;
+var path = require("path");
+var parse = require(path.join(__dirname, "../lib/wzeditor-rules-parser")).parse;
 var concat = require('concat-stream');
 var fs = require('fs');
 var file = process.argv[2];
